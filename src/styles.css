@@ -1,0 +1,714 @@
+@import "tailwindcss" source("../");
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+:root {
+  --font-heading: 'Cinzel Decorative', serif;
+  --font-title: 'Cinzel', serif;
+  --font-body: 'Cormorant Garamond', serif;
+
+  /* Palette */
+  --crimson:      #7a0c2e;
+  --crimson-deep: #4a0318;
+  --crimson-mid:  #b01040;
+  --gold:         #c9a84c;
+  --gold-bright:  #e8c96a;
+  --gold-pale:    #f3e3a0;
+  --rose:         #c97a8a;
+  --rose-pale:    #e8b8c2;
+  --ink:          #0d0507;
+  --ink-mid:      #160810;
+  --ink-light:    #2a1020;
+  --parchment:    #f5e8c0;
+  --parchment-dk: #ddc88a;
+}
+
+/* ─── Reset / Base ───────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--gold-pale);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Root wrapper ───────────────────────────────────────────────────────── */
+.devi-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Shared screen ──────────────────────────────────────────────────────── */
+.devi-screen {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 1rem 3rem;
+  position: relative;
+  overflow: hidden;
+  animation: deviAppear 0.6s ease both;
+}
+
+.devi-fade-out { opacity: 0; transition: opacity 0.35s ease; }
+
+@keyframes deviAppear {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Mandala background decoration ─────────────────────────────────────── */
+.devi-mandala-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 30%, rgba(122,12,46,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 80% at 50% 100%, rgba(74,3,24,0.5) 0%, transparent 70%),
+    radial-gradient(circle at 20% 80%, rgba(201,168,76,0.07) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(201,168,76,0.07) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Landing ────────────────────────────────────────────────────────────── */
+.devi-landing {
+  background: linear-gradient(160deg, var(--ink-mid) 0%, var(--ink) 50%, var(--crimson-deep) 100%);
+  justify-content: center;
+}
+
+.devi-landing-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 480px;
+  width: 100%;
+}
+
+/* ─── Halo + Image ───────────────────────────────────────────────────────── */
+.devi-halo-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 220px;
+}
+
+.devi-halo {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.35) 0%, rgba(201,168,76,0.12) 50%, transparent 70%);
+  box-shadow:
+    0 0 40px rgba(201,168,76,0.3),
+    0 0 80px rgba(201,168,76,0.12),
+    inset 0 0 30px rgba(201,168,76,0.1);
+  animation: haloPulse 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+.devi-halo-game {
+  position: absolute;
+  inset: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,0.25) 0%, rgba(201,168,76,0.08) 50%, transparent 70%);
+  box-shadow:
+    0 0 40px rgba(201,168,76,0.25),
+    0 0 80px rgba(201,168,76,0.1);
+  animation: haloPulse 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes haloPulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.06); }
+}
+
+.devi-landing-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.5), 0 8px 40px rgba(0,0,0,0.6);
+}
+
+/* ─── Typography ─────────────────────────────────────────────────────────── */
+.devi-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  color: var(--gold-bright);
+  text-align: center;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 30px rgba(201,168,76,0.5);
+}
+
+.devi-subtitle {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--rose-pale);
+  text-align: center;
+  letter-spacing: 0.1em;
+  opacity: 0.85;
+}
+
+/* ─── Input ──────────────────────────────────────────────────────────────── */
+.devi-input-wrap { width: 100%; max-width: 340px; }
+
+.devi-input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--gold-pale);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.4);
+  border-bottom: 2px solid var(--gold);
+  border-radius: 4px 4px 0 0;
+  padding: 0.7rem 1rem;
+  outline: none;
+  letter-spacing: 0.05em;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.devi-input::placeholder { color: rgba(201,168,76,0.4); font-style: italic; }
+.devi-input:focus {
+  border-color: var(--gold-bright);
+  box-shadow: 0 2px 20px rgba(201,168,76,0.2);
+}
+
+.devi-error {
+  color: var(--rose);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+/* ─── Button ─────────────────────────────────────────────────────────────── */
+.devi-btn {
+  position: relative;
+  background: linear-gradient(135deg, var(--crimson-mid), var(--crimson-deep));
+  border: 1px solid rgba(201,168,76,0.5);
+  border-radius: 4px;
+  padding: 0.8rem 2.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-width: 160px;
+}
+
+.devi-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.07), transparent);
+}
+
+.devi-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(201,168,76,0.3), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.devi-btn:active:not(:disabled) { transform: translateY(0); }
+.devi-btn:disabled, .devi-btn-dim { opacity: 0.45; cursor: not-allowed; }
+
+.devi-btn-inner {
+  position: relative;
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-bright);
+}
+
+.devi-submit-btn { margin-top: 0.5rem; }
+
+/* ─── Link-style button ──────────────────────────────────────────────────── */
+.devi-link {
+  background: none;
+  border: none;
+  color: rgba(201,168,76,0.6);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-style: italic;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.devi-link:hover { color: var(--gold-bright); }
+
+/* ─── Game Layout ────────────────────────────────────────────────────────── */
+.devi-game {
+  background: linear-gradient(170deg, var(--ink) 0%, var(--ink-mid) 40%, var(--crimson-deep) 100%);
+  padding-top: 0;
+  gap: 0;
+}
+
+.devi-game-header {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem 0.8rem;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(13,5,7,0.85);
+  backdrop-filter: blur(8px);
+}
+
+.devi-round-label,
+.devi-score-label,
+.devi-player-label {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: rgba(201,168,76,0.7);
+}
+
+.devi-score-label { color: var(--gold-bright); font-weight: 600; }
+.devi-player-label { font-style: italic; color: var(--rose-pale); opacity: 0.8; }
+
+.devi-game-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.5rem 1rem 2rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ─── Game Image ─────────────────────────────────────────────────────────── */
+.devi-img-wrap {
+  position: relative;
+  width: clamp(200px, 55vw, 300px);
+  height: clamp(200px, 55vw, 300px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.devi-game-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.45), 0 10px 50px rgba(0,0,0,0.7);
+}
+
+.devi-placeholder {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: radial-gradient(circle, rgba(122,12,46,0.5) 0%, rgba(74,3,24,0.8) 100%);
+  border: 2px solid rgba(201,168,76,0.3);
+  z-index: 1;
+}
+
+.devi-placeholder span { font-size: 3rem; }
+.devi-placeholder small {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(201,168,76,0.6);
+  letter-spacing: 0.1em;
+}
+
+/* ─── Feedback overlay ───────────────────────────────────────────────────── */
+.devi-feedback {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 700;
+  z-index: 3;
+  animation: feedbackPop 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.devi-feedback-correct {
+  background: radial-gradient(circle, rgba(0,100,50,0.75) 0%, rgba(0,60,30,0.55) 100%);
+  color: #7fff7f;
+  text-shadow: 0 0 20px rgba(100,255,150,0.8);
+}
+
+.devi-feedback-wrong {
+  background: radial-gradient(circle, rgba(120,0,0,0.75) 0%, rgba(60,0,0,0.55) 100%);
+  color: #ff9090;
+  text-shadow: 0 0 20px rgba(255,100,100,0.8);
+}
+
+.devi-feedback-timeout {
+  background: radial-gradient(circle, rgba(80,50,0,0.75) 0%, rgba(40,20,0,0.55) 100%);
+  color: var(--gold-pale);
+  font-size: 1rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  padding: 1rem;
+}
+
+.devi-timeout-label { text-align: center; }
+.devi-timeout-label small {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@keyframes feedbackPop {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ─── Timer ──────────────────────────────────────────────────────────────── */
+.devi-timer-wrap { display: flex; justify-content: center; }
+.devi-timer-svg { width: 80px; height: 80px; filter: drop-shadow(0 0 8px rgba(201,168,76,0.3)); }
+.devi-timer-text {
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ─── Controls / Scroll Dropdown ─────────────────────────────────────────── */
+.devi-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 360px;
+}
+
+.devi-scroll-wrap {
+  position: relative;
+  width: 100%;
+  background:
+    linear-gradient(to bottom, rgba(221,200,138,0.05) 0%, rgba(245,232,192,0.08) 50%, rgba(221,200,138,0.05) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(201,168,76,0.04) 28px,
+      rgba(201,168,76,0.04) 29px
+    );
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.4),
+    0 2px 12px rgba(0,0,0,0.3);
+}
+
+.devi-scroll-top-deco,
+.devi-scroll-btm-deco {
+  text-align: center;
+  padding: 4px 0;
+  color: rgba(201,168,76,0.45);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  user-select: none;
+  pointer-events: none;
+}
+
+.devi-scroll-btm-deco {
+  border-top: 1px solid rgba(201,168,76,0.15);
+  border-bottom: none;
+}
+
+.devi-scroll-select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gold-pale);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.7rem 2.2rem 0.7rem 1.2rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  letter-spacing: 0.05em;
+  text-align: center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='rgba%28201%2C168%2C76%2C0.6%29'%3E%3Cpath d='M7 7l3-3 3 3M7 13l3 3 3-3' stroke='rgba%28201%2C168%2C76%2C0.6%29' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 18px;
+}
+
+.devi-scroll-select option {
+  background: #1a0a10;
+  color: var(--gold-pale);
+  font-family: var(--font-body);
+}
+
+.devi-scroll-select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ─── Results ────────────────────────────────────────────────────────────── */
+.devi-results {
+  background: linear-gradient(160deg, var(--ink-mid) 0%, var(--ink) 50%, var(--crimson-deep) 100%);
+  justify-content: flex-start;
+}
+
+.devi-results-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+/* ─── Tabs ───────────────────────────────────────────────────────────────── */
+.devi-tab-bar {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.devi-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(201,168,76,0.55);
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.devi-tab + .devi-tab { border-left: 1px solid rgba(201,168,76,0.2); }
+.devi-tab-active {
+  background: rgba(201,168,76,0.12);
+  color: var(--gold-bright);
+}
+
+/* ─── Score display ──────────────────────────────────────────────────────── */
+.devi-result-name { font-size: clamp(1rem, 4vw, 1.6rem); }
+
+.devi-score-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.devi-score-big {
+  font-family: var(--font-heading);
+  font-size: clamp(3rem, 10vw, 5rem);
+  color: var(--gold-bright);
+  text-shadow: 0 0 40px rgba(201,168,76,0.5);
+  line-height: 1;
+}
+
+.devi-score-denom {
+  font-family: var(--font-body);
+  font-size: 1.4rem;
+  color: rgba(201,168,76,0.55);
+}
+
+.devi-blessing {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--rose-pale);
+  text-align: center;
+  opacity: 0.9;
+  max-width: 340px;
+}
+
+/* ─── Stat row ───────────────────────────────────────────────────────────── */
+.devi-stat-row {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.devi-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.devi-stat-num {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.devi-stat-num.correct { color: #7fff7f; text-shadow: 0 0 12px rgba(100,255,150,0.5); }
+.devi-stat-num.wrong   { color: #ff9090; text-shadow: 0 0 12px rgba(255,100,100,0.5); }
+
+.devi-stat-label {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+}
+
+.devi-stat-divider {
+  color: rgba(201,168,76,0.25);
+  font-size: 2rem;
+}
+
+/* ─── Collapsibles ───────────────────────────────────────────────────────── */
+.devi-collapsibles {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.devi-collapse-btn {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  color: var(--gold-bright);
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.devi-collapse-btn:hover { background: rgba(201,168,76,0.06); }
+
+.devi-name-list {
+  list-style: none;
+  border: 1px solid rgba(201,168,76,0.12);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.devi-name-list li {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--gold-pale);
+  padding: 0.15rem 0;
+  border-bottom: 1px solid rgba(201,168,76,0.07);
+}
+
+.devi-name-list-correct li { color: #a0f0b0; }
+.devi-name-list-wrong li   { color: rgba(255,200,200,0.85); }
+
+.devi-miss-correct { font-weight: 600; color: var(--gold-pale); }
+.devi-miss-guess   { color: rgba(201,168,76,0.5); font-size: 0.85rem; }
+
+.devi-result-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+/* ─── Section title ──────────────────────────────────────────────────────── */
+.devi-section-title {
+  font-family: var(--font-title);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: rgba(201,168,76,0.6);
+}
+
+/* ─── Leaderboard ────────────────────────────────────────────────────────── */
+.devi-leaderboard {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.devi-lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+}
+
+.devi-lb-table th {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  text-align: left;
+}
+
+.devi-lb-table td {
+  padding: 0.55rem 0.8rem;
+  color: var(--gold-pale);
+  border-bottom: 1px solid rgba(201,168,76,0.08);
+}
+
+.devi-lb-gold td { color: var(--gold-bright); }
+.devi-lb-gold td:first-child { font-weight: 700; }
+
+.devi-empty-board {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: rgba(201,168,76,0.45);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.35); border-radius: 2px; }
+
+/* ─── Mobile tweaks ──────────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .devi-game-header { flex-wrap: wrap; gap: 0.3rem; padding: 0.7rem 0.8rem; }
+  .devi-player-label { width: 100%; text-align: center; }
+  .devi-halo-wrap { width: 175px; height: 175px; }
+  .devi-landing-img { width: 155px; height: 155px; }
+}
