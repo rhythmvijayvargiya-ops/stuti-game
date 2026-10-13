@@ -181,7 +181,7 @@ function LandingScreen({
       <div className="devi-landing-inner">
         <div className="devi-halo-wrap">
           <img
-            src="/images/nageshwari.jpg"
+            src={`${import.meta.env.BASE_URL}images/nageshwari.jpg`}
             alt="Lingabhairavi Devi"
             className="devi-landing-img"
             onError={(e) => {
@@ -332,7 +332,7 @@ function GameScreen({
         <div className="devi-img-wrap">
           <div className="devi-halo devi-halo-game" aria-hidden />
           <img
-            src={`/images/${currentName}.jpg`}
+            src={`${import.meta.env.BASE_URL}images/${currentName}.jpg`}
             alt="Devi form"
             className="devi-game-img"
             onError={(e) => {
