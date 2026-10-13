@@ -39,6 +39,24 @@ const DEVI_NAMES: string[] = [
   'mukti_dayini',
 ]
 
+function deviImageSrc(name: string) {
+  return `${import.meta.env.BASE_URL}images/${name}.jpg`
+}
+
+function preloadDeviImages(names: string[]) {
+  const queue = [...names]
+  const loadNext = () => {
+    const name = queue.shift()
+    if (!name) return
+    const img = new Image()
+    const done = () => loadNext()
+    img.onload = done
+    img.onerror = done
+    img.src = deviImageSrc(name)
+  }
+  for (let i = 0; i < 6; i++) loadNext()
+}
+
 const ROUND_SECONDS = 11
 const POINTS_PER_CORRECT = 1
 const MAX_SCORE = DEVI_NAMES.length * POINTS_PER_CORRECT
@@ -260,6 +278,10 @@ function GameScreen({
   const currentName = order.current[roundIdx]
   const choices = useMemo(() => pickChoices(currentName), [currentName])
 
+  useEffect(() => {
+    preloadDeviImages(order.current.slice(roundIdx))
+  }, [roundIdx])
+
   const advanceRound = useCallback(
     (result: RoundResult, addedScore: number) => {
       if (timerRef.current) clearInterval(timerRef.current)
@@ -338,7 +360,7 @@ function GameScreen({
         <div className="devi-img-wrap">
           <div className="devi-halo devi-halo-game" aria-hidden />
           <img
-            src={`${import.meta.env.BASE_URL}images/${currentName}.jpg`}
+            src={deviImageSrc(currentName)}
             alt="Devi form"
             className="devi-game-img"
             onError={(e) => {
@@ -531,6 +553,10 @@ function formatName(n: string): string {
 // ─── Root Orchestrator ────────────────────────────────────────────────────────
 export function DeviGame() {
   const [screen, setScreen] = useState<Screen>('landing')
+
+  useEffect(() => {
+    preloadDeviImages(DEVI_NAMES)
+  }, [])
   const [playerName, setPlayerName] = useState('')
   const [finalScore, setFinalScore] = useState(0)
   const [finalResults, setFinalResults] = useState<RoundResult[]>([])
