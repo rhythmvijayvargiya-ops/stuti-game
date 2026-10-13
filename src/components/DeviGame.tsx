@@ -186,7 +186,7 @@ function LandingScreen({
       <div className="devi-landing-inner">
         <div className="devi-halo-wrap">
           <img
-            src={`${import.meta.env.BASE_URL}images/nageshwari.jpg`}
+            src={`${import.meta.env.BASE_URL}images/home.jpg`}
             alt="Lingabhairavi Devi"
             className="devi-landing-img"
             onError={(e) => {
@@ -196,7 +196,7 @@ function LandingScreen({
           <div className="devi-halo" aria-hidden />
         </div>
 
-        <h1 className="devi-title">How well do you know Devi?</h1>
+        <h1 className="devi-title">How well do you know Devi's names?</h1>
         <p className="devi-subtitle">33 forms. 33 names. One Devi.</p>
 
         {!showBoard ? (
@@ -354,10 +354,9 @@ function GameScreen({
             }}
           />
 
-          {feedback && (
+          {feedback && feedback !== 'wrong' && (
             <div className={`devi-feedback devi-feedback-${feedback}`}>
               {feedback === 'correct' && '✓'}
-              {feedback === 'wrong' && '✗'}
               {feedback === 'timeout' && (
                 <span className="devi-timeout-label">
                   <small>Time's up</small>
@@ -386,6 +385,11 @@ function GameScreen({
                   onClick={() => handleChoose(name)}
                   disabled={!!feedback}
                 >
+                  {feedback === 'wrong' && name === selected && (
+                    <span className="devi-choice-x" aria-hidden>
+                      ✗
+                    </span>
+                  )}
                   {formatName(name)}
                 </button>
               )

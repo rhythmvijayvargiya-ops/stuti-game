@@ -288,7 +288,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 1.2rem;
-  padding: 1.5rem 1rem 2rem;
+  padding: 2.4rem 1rem 2rem;
   width: 100%;
   max-width: 500px;
 }
@@ -413,6 +413,10 @@ html, body {
 
 .devi-choice {
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   font-family: var(--font-body);
   font-size: 1.05rem;
   font-weight: 600;
@@ -443,6 +447,12 @@ html, body {
   border-color: #e74c3c;
   color: #f5b7b1;
   background: rgba(192, 57, 43, 0.3);
+}
+
+.devi-choice-x {
+  color: #ff9090;
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
 .devi-scroll-wrap {
