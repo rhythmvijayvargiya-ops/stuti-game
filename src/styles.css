@@ -114,17 +114,13 @@ html, body {
 }
 
 .devi-halo-game {
-  position: absolute;
-  inset: -20px;
-  width: calc(100% + 40px);
-  height: calc(100% + 40px);
-  border-radius: 38px;
-  background: rgba(201,168,76,0.16);
-  box-shadow:
-    0 0 40px rgba(201,168,76,0.25),
-    0 0 80px rgba(201,168,76,0.1);
-  animation: haloPulse 4s ease-in-out infinite;
-  z-index: 0;
+  inset: -8px;
+  width: auto;
+  height: auto;
+  border-radius: 26px;
+  background: rgba(201,168,76,0.14);
+  box-shadow: none;
+  animation: none;
 }
 
 @keyframes haloPulse {
@@ -314,7 +310,7 @@ html, body {
   border-radius: 18px;
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 0 3px rgba(201,168,76,0.45), 0 10px 50px rgba(0,0,0,0.7);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.45);
 }
 
 .devi-placeholder {
