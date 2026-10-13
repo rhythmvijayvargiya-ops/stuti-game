@@ -300,8 +300,8 @@ html, body {
 /* ─── Game Image ─────────────────────────────────────────────────────────── */
 .devi-img-wrap {
   position: relative;
-  width: clamp(200px, 55vw, 300px);
-  height: clamp(200px, 55vw, 300px);
+  width: clamp(160px, 42vw, 240px);
+  height: clamp(160px, 42vw, 240px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -398,14 +398,55 @@ html, body {
   font-weight: 600;
 }
 
-/* ─── Controls / Scroll Dropdown ─────────────────────────────────────────── */
+/* ─── Controls / Four choices ────────────────────────────────────────────── */
 .devi-controls {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.8rem;
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
+}
+
+.devi-choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: 100%;
+}
+
+.devi-choice {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gold-pale);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.devi-choice:hover:not(:disabled) {
+  border-color: var(--gold-bright);
+  color: var(--gold-bright);
+}
+
+.devi-choice:disabled { cursor: default; }
+
+.devi-choice-correct {
+  border-color: #7dcea0;
+  color: #d5f5e3;
+  background: rgba(39, 174, 96, 0.28);
+}
+
+.devi-choice-wrong {
+  border-color: #e74c3c;
+  color: #f5b7b1;
+  background: rgba(192, 57, 43, 0.3);
 }
 
 .devi-scroll-wrap {

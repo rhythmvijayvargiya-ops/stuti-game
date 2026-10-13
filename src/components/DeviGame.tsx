@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 
 // ─── 33 Names of Lingabhairavi Devi ───────────────────────────────────────────
 // Filenames in /images/ (without extension) are the answer keys.
@@ -40,7 +40,7 @@ const DEVI_NAMES: string[] = [
 ]
 
 const ROUND_SECONDS = 11
-const POINTS_PER_CORRECT = 11
+const POINTS_PER_CORRECT = 1
 const MAX_SCORE = DEVI_NAMES.length * POINTS_PER_CORRECT
 
 type Screen = 'landing' | 'game' | 'results'
@@ -57,6 +57,11 @@ interface RoundResult {
   name: string
   correct: boolean
   guessed: string | null
+}
+
+function pickChoices(correct: string): string[] {
+  const distractors = shuffle(DEVI_NAMES.filter((name) => name !== correct)).slice(0, 3)
+  return shuffle([correct, ...distractors])
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -253,6 +258,7 @@ function GameScreen({
   const lockedRef = useRef(false)
 
   const currentName = order.current[roundIdx]
+  const choices = useMemo(() => pickChoices(currentName), [currentName])
 
   const advanceRound = useCallback(
     (result: RoundResult, addedScore: number) => {
@@ -305,18 +311,18 @@ function GameScreen({
     }
   }, [roundIdx]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleSubmit = () => {
-    if (lockedRef.current || !selected) return
-    const isCorrect = selected === currentName
+  const handleChoose = (name: string) => {
+    if (lockedRef.current) return
+    setSelected(name)
+    const isCorrect = name === currentName
     setFeedback(isCorrect ? 'correct' : 'wrong')
     advanceRound(
-      { name: currentName, correct: isCorrect, guessed: selected },
+      { name: currentName, correct: isCorrect, guessed: name },
       isCorrect ? POINTS_PER_CORRECT : 0
     )
   }
 
   const progress = timeLeft / ROUND_SECONDS
-  const sortedNames = [...DEVI_NAMES].sort()
 
   return (
     <div className={`devi-screen devi-game${fading ? ' devi-fade-out' : ''}`}>
@@ -368,35 +374,23 @@ function GameScreen({
         </div>
 
         <div className="devi-controls">
-          <div className="devi-scroll-wrap">
-            <div className="devi-scroll-top-deco" aria-hidden>
-              <span>⌘</span>
-            </div>
-            <select
-              className="devi-scroll-select"
-              value={selected}
-              onChange={(e) => setSelected(e.target.value)}
-              disabled={!!feedback}
-            >
-              <option value="">— Choose her name —</option>
-              {sortedNames.map((n) => (
-                <option key={n} value={n}>
-                  {formatName(n)}
-                </option>
-              ))}
-            </select>
-            <div className="devi-scroll-btm-deco" aria-hidden>
-              <span>⌘</span>
-            </div>
+          <div className="devi-choice-list" role="group" aria-label="Choose her name">
+            {choices.map((name) => {
+              const revealed =
+                feedback && (name === currentName ? 'correct' : name === selected ? 'wrong' : '')
+              return (
+                <button
+                  key={name}
+                  type="button"
+                  className={`devi-choice${revealed ? ` devi-choice-${revealed}` : ''}`}
+                  onClick={() => handleChoose(name)}
+                  disabled={!!feedback}
+                >
+                  {formatName(name)}
+                </button>
+              )
+            })}
           </div>
-
-          <button
-            className={`devi-btn devi-submit-btn${!selected || !!feedback ? ' devi-btn-dim' : ''}`}
-            onClick={handleSubmit}
-            disabled={!selected || !!feedback}
-          >
-            <span className="devi-btn-inner">Offer Answer</span>
-          </button>
         </div>
       </div>
     </div>
