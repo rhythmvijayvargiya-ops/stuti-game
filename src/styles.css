@@ -296,8 +296,8 @@ html, body {
 /* ─── Game Image ─────────────────────────────────────────────────────────── */
 .devi-img-wrap {
   position: relative;
-  width: clamp(160px, 42vw, 240px);
-  height: clamp(160px, 42vw, 240px);
+  width: clamp(220px, 52vw, 320px);
+  height: clamp(220px, 52vw, 320px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -387,10 +387,10 @@ html, body {
 
 /* ─── Timer ──────────────────────────────────────────────────────────────── */
 .devi-timer-wrap { display: flex; justify-content: center; }
-.devi-timer-svg { width: 80px; height: 80px; filter: drop-shadow(0 0 8px rgba(201,168,76,0.3)); }
+.devi-timer-svg { width: 62px; height: 62px; filter: drop-shadow(0 0 8px rgba(201,168,76,0.3)); }
 .devi-timer-text {
   font-family: var(--font-title);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
 }
 
@@ -756,8 +756,13 @@ html, body {
 @media (max-width: 640px) {
   .devi-game-header { flex-wrap: wrap; gap: 0.35rem; padding: 0.85rem 0.9rem 1rem; }
   .devi-player-label { width: 100%; text-align: center; }
-  .devi-game-body { padding-top: 1.6rem; }
-  .devi-img-wrap { margin-top: 0.85rem; }
+  .devi-game-body { gap: 0.7rem; padding-top: 1rem; padding-bottom: 1rem; }
+  .devi-img-wrap {
+    width: min(74vw, 340px);
+    height: min(74vw, 340px);
+    margin-top: 0.35rem;
+  }
+  .devi-timer-svg { width: 54px; height: 54px; }
   .devi-halo-wrap { width: 175px; height: 175px; }
   .devi-landing-img { width: 155px; height: 155px; }
 }
