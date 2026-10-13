@@ -69,6 +69,7 @@ interface LeaderboardEntry {
   score: number
   correct: number
   date: string
+  timeMs?: number
 }
 
 interface RoundResult {
@@ -101,6 +102,14 @@ function getLeaderboard(): LeaderboardEntry[] {
 
 function saveLeaderboard(entries: LeaderboardEntry[]) {
   localStorage.setItem('devi_leaderboard', JSON.stringify(entries))
+}
+
+function formatDuration(ms: number | undefined) {
+  if (ms == null || !Number.isFinite(ms)) return '—'
+  const total = Math.max(0, Math.round(ms / 1000))
+  const minutes = Math.floor(total / 60)
+  const seconds = total % 60
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
 }
 
 // ─── Arc Timer SVG ────────────────────────────────────────────────────────────
@@ -138,7 +147,7 @@ function ArcTimer({ progress }: { progress: number }) {
 // ─── Leaderboard ──────────────────────────────────────────────────────────────
 function Leaderboard() {
   const entries = getLeaderboard()
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score - a.score || (a.timeMs ?? Infinity) - (b.timeMs ?? Infinity))
     .slice(0, 20)
 
   if (entries.length === 0) {
@@ -157,6 +166,7 @@ function Leaderboard() {
             <th>#</th>
             <th>Devotee</th>
             <th>Score</th>
+            <th>Time</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -168,6 +178,7 @@ function Leaderboard() {
               <td>
                 {e.score} / {MAX_SCORE}
               </td>
+              <td>{formatDuration(e.timeMs)}</td>
               <td>{e.date}</td>
             </tr>
           ))}
@@ -262,8 +273,9 @@ function GameScreen({
   onComplete,
 }: {
   playerName: string
-  onComplete: (results: RoundResult[], score: number) => void
+  onComplete: (results: RoundResult[], score: number, timeMs: number) => void
 }) {
+  const startedAt = useRef(performance.now())
   const order = useRef(shuffle(DEVI_NAMES))
   const [roundIdx, setRoundIdx] = useState(0)
   const [selected, setSelected] = useState<string>('')
@@ -294,7 +306,7 @@ function GameScreen({
         setFading(true)
         setTimeout(() => {
           if (roundIdx + 1 >= DEVI_NAMES.length) {
-            onComplete(newResults, newScore)
+            onComplete(newResults, newScore, performance.now() - startedAt.current)
           } else {
             setResults(newResults)
             setScore(newScore)
@@ -428,11 +440,13 @@ function ResultsScreen({
   playerName,
   score,
   results,
+  timeMs,
   onPlayAgain,
 }: {
   playerName: string
   score: number
   results: RoundResult[]
+  timeMs: number
   onPlayAgain: () => void
 }) {
   const [tab, setTab] = useState<Tab>('results')
@@ -491,6 +505,11 @@ function ResultsScreen({
                 <span className="devi-stat-num wrong">{wrong.length}</span>
                 <span className="devi-stat-label">Missed</span>
               </div>
+              <div className="devi-stat-divider">·</div>
+              <div className="devi-stat">
+                <span className="devi-stat-num time">{formatDuration(timeMs)}</span>
+                <span className="devi-stat-label">Time</span>
+              </div>
             </div>
 
             <div className="devi-collapsibles">
@@ -529,6 +548,9 @@ function ResultsScreen({
               <button className="devi-btn" onClick={onPlayAgain}>
                 <span className="devi-btn-inner">Play Again</span>
               </button>
+              <p className="devi-play-again-note">
+                Play again to get more names right, and beat your own time.
+              </p>
             </div>
           </>
         ) : (
@@ -559,6 +581,7 @@ export function DeviGame() {
   }, [])
   const [playerName, setPlayerName] = useState('')
   const [finalScore, setFinalScore] = useState(0)
+  const [finalTimeMs, setFinalTimeMs] = useState(0)
   const [finalResults, setFinalResults] = useState<RoundResult[]>([])
 
   const handleBegin = (name: string) => {
@@ -566,17 +589,18 @@ export function DeviGame() {
     setScreen('game')
   }
 
-  const handleComplete = (results: RoundResult[], score: number) => {
+  const handleComplete = (results: RoundResult[], score: number, timeMs: number) => {
     setFinalResults(results)
     setFinalScore(score)
+    setFinalTimeMs(timeMs)
 
-    // Save to leaderboard
     const board = getLeaderboard()
     board.push({
       name: playerName,
       score,
       correct: results.filter((r) => r.correct).length,
       date: new Date().toLocaleDateString(),
+      timeMs: Math.round(timeMs),
     })
     saveLeaderboard(board)
 
@@ -586,6 +610,7 @@ export function DeviGame() {
   const handlePlayAgain = () => {
     setFinalResults([])
     setFinalScore(0)
+    setFinalTimeMs(0)
     setScreen('landing')
   }
 
@@ -598,6 +623,7 @@ export function DeviGame() {
           playerName={playerName}
           score={finalScore}
           results={finalResults}
+          timeMs={finalTimeMs}
           onPlayAgain={handlePlayAgain}
         />
       )}

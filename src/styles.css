@@ -602,7 +602,7 @@ html, body {
 /* ─── Stat row ───────────────────────────────────────────────────────────── */
 .devi-stat-row {
   display: flex;
-  gap: 2rem;
+  gap: 1.1rem;
   align-items: center;
 }
 
@@ -621,6 +621,11 @@ html, body {
 
 .devi-stat-num.correct { color: #7fff7f; text-shadow: 0 0 12px rgba(100,255,150,0.5); }
 .devi-stat-num.wrong   { color: #ff9090; text-shadow: 0 0 12px rgba(255,100,100,0.5); }
+.devi-stat-num.time {
+  font-size: 1.7rem;
+  color: var(--gold-bright);
+  text-shadow: 0 0 12px rgba(201,168,76,0.45);
+}
 
 .devi-stat-label {
   font-family: var(--font-title);
@@ -691,10 +696,22 @@ html, body {
 
 .devi-result-actions {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
   padding-top: 0.5rem;
+}
+
+.devi-play-again-note {
+  margin: 0;
+  max-width: 280px;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--rose-pale);
+  opacity: 0.85;
 }
 
 /* ─── Section title ──────────────────────────────────────────────────────── */
@@ -763,6 +780,11 @@ html, body {
     margin-top: 0.35rem;
   }
   .devi-timer-svg { width: 54px; height: 54px; }
+  .devi-stat-row { gap: 0.7rem; }
+  .devi-lb-table th,
+  .devi-lb-table td { padding: 0.5rem 0.35rem; }
+  .devi-lb-table { font-size: 0.85rem; }
+  .devi-lb-table th { letter-spacing: 0.08em; }
   .devi-halo-wrap { width: 175px; height: 175px; }
   .devi-landing-img { width: 155px; height: 155px; }
 }
