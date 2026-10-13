@@ -753,9 +753,11 @@ html, body {
 ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.35); border-radius: 2px; }
 
 /* ─── Mobile tweaks ──────────────────────────────────────────────────────── */
-@media (max-width: 420px) {
-  .devi-game-header { flex-wrap: wrap; gap: 0.3rem; padding: 0.7rem 0.8rem; }
+@media (max-width: 640px) {
+  .devi-game-header { flex-wrap: wrap; gap: 0.35rem; padding: 0.85rem 0.9rem 1rem; }
   .devi-player-label { width: 100%; text-align: center; }
+  .devi-game-body { padding-top: 1.6rem; }
+  .devi-img-wrap { margin-top: 0.85rem; }
   .devi-halo-wrap { width: 175px; height: 175px; }
   .devi-landing-img { width: 155px; height: 155px; }
 }
