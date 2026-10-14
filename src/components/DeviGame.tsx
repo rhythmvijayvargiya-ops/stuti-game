@@ -114,8 +114,15 @@ function saveLeaderboard(entries: LeaderboardEntry[]) {
   localStorage.setItem('devi_leaderboard', JSON.stringify(entries))
 }
 
-const SHARED_BOARD_URL =
-  'https://crudcrud.com/api/0bc9464738e74df099dc3f1e27b31171/scores'
+const SUPABASE_URL = 'https://ypuzydyzpfqhwtvsrpmq.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_ls19Xg3NuDgANofZQchVNA_Y4RVwT4_'
+
+function supabaseHeaders() {
+  return {
+    apikey: SUPABASE_KEY,
+    'Content-Type': 'application/json',
+  }
+}
 
 function rankEntries(entries: LeaderboardEntry[]) {
   return [...entries].sort(
@@ -131,25 +138,28 @@ async function postSharedScore(entry: LeaderboardEntry) {
   const body: Record<string, string | number> = {
     name: entry.name.slice(0, 40),
     score: entry.score,
-    date: entry.date,
+    played_on: entry.date,
   }
-  if (entry.timeMs != null) body.timeMs = Math.round(entry.timeMs)
-  const response = await fetch(SHARED_BOARD_URL, {
+  if (entry.timeMs != null) body.time_ms = Math.round(entry.timeMs)
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/scores`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...supabaseHeaders(), Prefer: 'return=minimal' },
     body: JSON.stringify(body),
   })
   if (!response.ok) throw new Error('Could not save the shared score')
 }
 
 async function fetchSharedScores(): Promise<LeaderboardEntry[]> {
-  const response = await fetch(SHARED_BOARD_URL)
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/scores?select=name,score,time_ms,played_on`,
+    { headers: supabaseHeaders() },
+  )
   if (!response.ok) throw new Error('Could not load the shared board')
   const rows = (await response.json()) as Array<{
     name?: string
     score?: number
-    timeMs?: number
-    date?: string
+    time_ms?: number
+    played_on?: string
   }>
   return rows
     .filter((row) => typeof row.name === 'string' && typeof row.score === 'number')
@@ -157,8 +167,8 @@ async function fetchSharedScores(): Promise<LeaderboardEntry[]> {
       name: row.name as string,
       score: row.score as number,
       correct: row.score as number,
-      date: row.date || '',
-      timeMs: typeof row.timeMs === 'number' ? row.timeMs : undefined,
+      date: row.played_on || '',
+      timeMs: typeof row.time_ms === 'number' ? row.time_ms : undefined,
     }))
 }
 
