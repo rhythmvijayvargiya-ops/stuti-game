@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { isSoundMuted, playReveal, playTap, setSoundMuted, startMusic } from '../sound'
 
 // ─── 33 Names of Lingabhairavi Devi ───────────────────────────────────────────
 // Filenames in /images/ (without extension) are the answer keys.
@@ -414,6 +415,10 @@ function GameScreen({
     preloadDeviImages(order.current.slice(roundIdx))
   }, [roundIdx])
 
+  useEffect(() => {
+    playReveal()
+  }, [currentName])
+
   const advanceRound = useCallback(
     (result: RoundResult, addedScore: number) => {
       if (timerRef.current) clearInterval(timerRef.current)
@@ -705,6 +710,24 @@ function ResultsScreen({
   )
 }
 
+function SoundButton() {
+  const [muted, setMuted] = useState(isSoundMuted())
+  return (
+    <button
+      type="button"
+      className={`devi-sound${muted ? ' devi-sound-off' : ''}`}
+      aria-pressed={!muted}
+      aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+      onClick={(event) => {
+        event.stopPropagation()
+        setMuted(setSoundMuted(!muted))
+      }}
+    >
+      {muted ? '♫×' : '♪'}
+    </button>
+  )
+}
+
 // ─── Utility ──────────────────────────────────────────────────────────────────
 function formatName(n: string): string {
   return n
@@ -723,9 +746,19 @@ export function DeviGame() {
   const [finalResults, setFinalResults] = useState<RoundResult[]>([])
 
   const handleBegin = (name: string) => {
+    startMusic()
     setPlayerName(name)
     setScreen('game')
   }
+
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const target = event.target
+      if (target instanceof Element && target.closest('button')) playTap()
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [])
 
   const handleComplete = (results: RoundResult[], score: number, timeMs: number) => {
     setFinalResults(results)
@@ -755,6 +788,7 @@ export function DeviGame() {
 
   return (
     <div className="devi-root">
+      <SoundButton />
       {screen === 'landing' && <LandingScreen onBegin={handleBegin} initialName={playerName} />}
       {screen === 'game' && <GameScreen playerName={playerName} onComplete={handleComplete} />}
       {screen === 'results' && (
