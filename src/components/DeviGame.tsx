@@ -160,16 +160,16 @@ function Leaderboard() {
     .sort((a, b) => b.score - a.score || (a.timeMs ?? Infinity) - (b.timeMs ?? Infinity))
     .slice(0, 20)
 
-  if (entries.length === 0) {
-    return (
-      <div className="devi-empty-board">
-        <p>No scores yet. Be the first to play.</p>
-      </div>
-    )
-  }
-
   return (
     <div className="devi-leaderboard">
+      <p className="devi-prize-note">
+        Prizes will be revealed at 11 AM, on Vijayadashami (Oct 20)
+      </p>
+      {entries.length === 0 ? (
+        <div className="devi-empty-board">
+          <p>No scores yet. Be the first to play.</p>
+        </div>
+      ) : (
       <table className="devi-lb-table">
         <thead>
           <tr>
@@ -194,6 +194,7 @@ function Leaderboard() {
           ))}
         </tbody>
       </table>
+      )}
     </div>
   )
 }
@@ -468,6 +469,8 @@ function ResultsScreen({
   const [tab, setTab] = useState<Tab>('results')
   const [showCorrect, setShowCorrect] = useState(false)
   const [showWrong, setShowWrong] = useState(false)
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const boardRef = useRef<HTMLElement>(null)
 
   const correct = results.filter((r) => r.correct)
   const wrong = results.filter((r) => !r.correct)
@@ -480,29 +483,48 @@ function ResultsScreen({
         ? 'The Devi acknowledges your devotion.'
         : 'Keep gazing upon her forms. She will reveal herself.'
 
+  useEffect(() => {
+    const root = scrollerRef.current
+    const board = boardRef.current
+    if (!root || !board) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setTab(entry.isIntersecting ? 'leaderboard' : 'results'),
+      { root, rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+    )
+    observer.observe(board)
+    return () => observer.disconnect()
+  }, [])
+
+  const showSection = (next: Tab) => {
+    setTab(next)
+    if (next === 'results') {
+      scrollerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    boardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
-    <div className="devi-screen devi-results">
+    <div className="devi-screen devi-results" ref={scrollerRef}>
       <div className="devi-mandala-bg" aria-hidden />
 
       <div className="devi-results-inner">
         <div className="devi-tab-bar">
           <button
             className={`devi-tab${tab === 'results' ? ' devi-tab-active' : ''}`}
-            onClick={() => setTab('results')}
+            onClick={() => showSection('results')}
           >
             Your Results
           </button>
           <button
             className={`devi-tab${tab === 'leaderboard' ? ' devi-tab-active' : ''}`}
-            onClick={() => setTab('leaderboard')}
+            onClick={() => showSection('leaderboard')}
           >
             Leaderboard
           </button>
         </div>
 
-        {tab === 'results' ? (
-          <>
-            <h2 className="devi-title devi-result-name">{playerName}</h2>
+        <h2 className="devi-title devi-result-name">{playerName}</h2>
 
             <div className="devi-score-display">
               <span className="devi-score-big">{score}</span>
@@ -568,13 +590,11 @@ function ResultsScreen({
                 Play again to get more names right, and beat your own time.
               </p>
             </div>
-          </>
-        ) : (
-          <>
-            <h2 className="devi-title">Hall of Devotees</h2>
-            <Leaderboard />
-          </>
-        )}
+
+            <section className="devi-results-board" ref={boardRef}>
+              <h2 className="devi-title">Hall of Devotees</h2>
+              <Leaderboard />
+            </section>
       </div>
     </div>
   )
