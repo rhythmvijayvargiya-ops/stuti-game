@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { isSoundMuted, playReveal, playTap, setSoundMuted, startMusic } from '../sound'
+import { isSoundMuted, playReveal, playTap, setSoundMuted } from '../sound'
 
 // ─── 33 Names of Lingabhairavi Devi ───────────────────────────────────────────
 // Filenames in /images/ (without extension) are the answer keys.
@@ -746,7 +746,6 @@ export function DeviGame() {
   const [finalResults, setFinalResults] = useState<RoundResult[]>([])
 
   const handleBegin = (name: string) => {
-    startMusic()
     setPlayerName(name)
     setScreen('game')
   }

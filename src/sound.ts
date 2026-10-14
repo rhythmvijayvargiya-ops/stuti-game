@@ -1,6 +1,5 @@
 const src = (name: string) => `${import.meta.env.BASE_URL}audio/${name}.mp3`
 
-let music: HTMLAudioElement | null = null
 let muted = false
 
 function clip(name: string, volume: number) {
@@ -16,23 +15,11 @@ export function isSoundMuted() {
 
 export function setSoundMuted(next: boolean) {
   muted = next
-  if (music) music.muted = next
-  if (!next) startMusic()
   return muted
-}
-
-export function startMusic() {
-  if (muted) return
-  if (!music) {
-    music = clip('bg', 0.28)
-    music.loop = true
-  }
-  music.play().catch(() => {})
 }
 
 export function playTap() {
   if (muted) return
-  startMusic()
   clip('tap', 0.5).play().catch(() => {})
 }
 
