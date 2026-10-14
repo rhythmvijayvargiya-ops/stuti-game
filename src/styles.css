@@ -40,24 +40,6 @@ html, body {
   flex-direction: column;
 }
 
-.devi-sound {
-  position: fixed;
-  top: 0.7rem;
-  right: 0.7rem;
-  z-index: 30;
-  width: 2.3rem;
-  height: 2.3rem;
-  border-radius: 4px;
-  border: 1px solid rgba(201,168,76,0.4);
-  background: rgba(13,5,7,0.72);
-  color: var(--gold-bright);
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.devi-sound-off { color: rgba(201,168,76,0.4); }
-
 /* ─── Shared screen ──────────────────────────────────────────────────────── */
 .devi-screen {
   min-height: 100dvh;
