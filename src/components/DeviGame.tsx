@@ -162,9 +162,6 @@ function Leaderboard() {
 
   return (
     <div className="devi-leaderboard">
-      <p className="devi-prize-note">
-        Prizes will be revealed at 11 AM, on Vijayadashami (Oct 20)
-      </p>
       {entries.length === 0 ? (
         <div className="devi-empty-board">
           <p>No scores yet. Be the first to play.</p>
@@ -586,12 +583,10 @@ function ResultsScreen({
               <button className="devi-btn" onClick={onPlayAgain}>
                 <span className="devi-btn-inner">Play Again</span>
               </button>
-              <p className="devi-play-again-note">
-                Play again to get more names right, and beat your own time.
-              </p>
             </div>
 
             <section className="devi-results-board" ref={boardRef}>
+              <p className="devi-section-tab">Leaderboard</p>
               <h2 className="devi-title">Hall of Devotees</h2>
               <Leaderboard />
             </section>

@@ -712,16 +712,16 @@ html, body {
   padding-top: 0.5rem;
 }
 
-.devi-play-again-note {
-  margin: 0;
-  max-width: 280px;
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.95rem;
-  line-height: 1.45;
-  text-align: center;
-  color: var(--rose-pale);
-  opacity: 0.85;
+.devi-section-tab {
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 4px;
+  background: rgba(201,168,76,0.12);
+  color: var(--gold-bright);
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
 }
 
 .devi-results-board {
@@ -733,16 +733,6 @@ html, body {
   scroll-margin-top: 4.5rem;
   min-height: calc(100dvh - 4.5rem);
   padding-bottom: 1.5rem;
-}
-
-.devi-prize-note {
-  margin: 0 0 0.85rem;
-  text-align: center;
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 1.05rem;
-  line-height: 1.45;
-  color: var(--gold-bright);
 }
 
 /* ─── Section title ──────────────────────────────────────────────────────── */
