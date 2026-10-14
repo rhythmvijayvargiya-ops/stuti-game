@@ -114,6 +114,83 @@ function saveLeaderboard(entries: LeaderboardEntry[]) {
   localStorage.setItem('devi_leaderboard', JSON.stringify(entries))
 }
 
+const SHARED_BOARD_URL =
+  'https://crudcrud.com/api/0bc9464738e74df099dc3f1e27b31171/scores'
+
+function rankEntries(entries: LeaderboardEntry[]) {
+  return [...entries].sort(
+    (a, b) => b.score - a.score || (a.timeMs ?? Infinity) - (b.timeMs ?? Infinity),
+  )
+}
+
+function sameEntry(a: LeaderboardEntry, b: LeaderboardEntry) {
+  return a.name === b.name && a.score === b.score && a.date === b.date && (a.timeMs ?? null) === (b.timeMs ?? null)
+}
+
+async function postSharedScore(entry: LeaderboardEntry) {
+  const body: Record<string, string | number> = {
+    name: entry.name.slice(0, 40),
+    score: entry.score,
+    date: entry.date,
+  }
+  if (entry.timeMs != null) body.timeMs = Math.round(entry.timeMs)
+  const response = await fetch(SHARED_BOARD_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  })
+  if (!response.ok) throw new Error('Could not save the shared score')
+}
+
+async function fetchSharedScores(): Promise<LeaderboardEntry[]> {
+  const response = await fetch(SHARED_BOARD_URL)
+  if (!response.ok) throw new Error('Could not load the shared board')
+  const rows = (await response.json()) as Array<{
+    name?: string
+    score?: number
+    timeMs?: number
+    date?: string
+  }>
+  return rows
+    .filter((row) => typeof row.name === 'string' && typeof row.score === 'number')
+    .map((row) => ({
+      name: row.name as string,
+      score: row.score as number,
+      correct: row.score as number,
+      date: row.date || '',
+      timeMs: typeof row.timeMs === 'number' ? row.timeMs : undefined,
+    }))
+}
+
+async function loadSharedBoardOnce(): Promise<LeaderboardEntry[]> {
+  let remote = await fetchSharedScores()
+  const missing = getLeaderboard().filter((local) => !remote.some((row) => sameEntry(row, local)))
+  if (missing.length > 0) {
+    await Promise.all(missing.map((entry) => postSharedScore(entry).catch(() => null)))
+    try {
+      remote = await fetchSharedScores()
+    } catch {
+      /* keep the scores already loaded */
+    }
+  }
+  const merged = [...remote]
+  for (const local of getLeaderboard()) {
+    if (!merged.some((entry) => sameEntry(entry, local))) merged.push(local)
+  }
+  return rankEntries(merged)
+}
+
+let boardRequest: Promise<LeaderboardEntry[]> | null = null
+
+function loadSharedBoard() {
+  if (!boardRequest) {
+    boardRequest = loadSharedBoardOnce().finally(() => {
+      boardRequest = null
+    })
+  }
+  return boardRequest
+}
+
 function formatDuration(ms: number | undefined) {
   if (ms == null || !Number.isFinite(ms)) return '—'
   const total = Math.max(0, Math.round(ms / 1000))
@@ -156,9 +233,30 @@ function ArcTimer({ progress }: { progress: number }) {
 
 // ─── Leaderboard ──────────────────────────────────────────────────────────────
 function Leaderboard() {
-  const entries = getLeaderboard()
-    .sort((a, b) => b.score - a.score || (a.timeMs ?? Infinity) - (b.timeMs ?? Infinity))
-    .slice(0, 20)
+  const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const ranked = await loadSharedBoard()
+        if (!cancelled) setEntries(ranked)
+      } catch {
+        if (!cancelled) setEntries(rankEntries(getLeaderboard()))
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (entries === null) {
+    return (
+      <div className="devi-empty-board">
+        <p>Gathering the hall…</p>
+      </div>
+    )
+  }
 
   return (
     <div className="devi-leaderboard">
@@ -624,14 +722,15 @@ export function DeviGame() {
     setFinalScore(score)
     setFinalTimeMs(timeMs)
 
-    const board = getLeaderboard()
-    board.push({
+    const entry: LeaderboardEntry = {
       name: playerName,
       score,
       correct: results.filter((r) => r.correct).length,
       date: new Date().toLocaleDateString(),
       timeMs: Math.round(timeMs),
-    })
+    }
+    const board = getLeaderboard()
+    board.push(entry)
     saveLeaderboard(board)
 
     setScreen('results')
