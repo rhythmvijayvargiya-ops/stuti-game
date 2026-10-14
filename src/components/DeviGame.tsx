@@ -43,18 +43,28 @@ function deviImageSrc(name: string) {
   return `${import.meta.env.BASE_URL}images/${name}.jpg`
 }
 
-function preloadDeviImages(names: string[]) {
+let portraitsPreloading = false
+
+function preloadDeviImages(names: string[], concurrency = 4) {
   const queue = [...names]
   const loadNext = () => {
     const name = queue.shift()
     if (!name) return
     const img = new Image()
+    img.fetchPriority = 'low'
+    img.decoding = 'async'
     const done = () => loadNext()
     img.onload = done
     img.onerror = done
     img.src = deviImageSrc(name)
   }
-  for (let i = 0; i < 6; i++) loadNext()
+  for (let i = 0; i < concurrency; i++) loadNext()
+}
+
+function preloadPortraitsInBackground() {
+  if (portraitsPreloading) return
+  portraitsPreloading = true
+  preloadDeviImages(DEVI_NAMES)
 }
 
 const ROUND_SECONDS = 11
@@ -218,8 +228,12 @@ function LandingScreen({
             src={`${import.meta.env.BASE_URL}images/home.jpg`}
             alt="Lingabhairavi Devi"
             className="devi-landing-img"
+            fetchPriority="high"
+            decoding="async"
+            onLoad={preloadPortraitsInBackground}
             onError={(e) => {
               ;(e.target as HTMLImageElement).style.display = 'none'
+              preloadPortraitsInBackground()
             }}
           />
           <div className="devi-halo" aria-hidden />
@@ -375,6 +389,8 @@ function GameScreen({
             src={deviImageSrc(currentName)}
             alt="Devi form"
             className="devi-game-img"
+            fetchPriority="high"
+            decoding="async"
             onError={(e) => {
               const el = e.target as HTMLImageElement
               el.style.display = 'none'
@@ -576,9 +592,6 @@ function formatName(n: string): string {
 export function DeviGame() {
   const [screen, setScreen] = useState<Screen>('landing')
 
-  useEffect(() => {
-    preloadDeviImages(DEVI_NAMES)
-  }, [])
   const [playerName, setPlayerName] = useState('')
   const [finalScore, setFinalScore] = useState(0)
   const [finalTimeMs, setFinalTimeMs] = useState(0)

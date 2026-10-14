@@ -10,6 +10,11 @@ export const Route = createRootRoute({
     ],
     links: [
       {
+        rel: 'preload',
+        href: `${import.meta.env.BASE_URL}images/home.jpg`,
+        as: 'image',
+      },
+      {
         rel: 'preconnect',
         href: 'https://fonts.googleapis.com',
       },
