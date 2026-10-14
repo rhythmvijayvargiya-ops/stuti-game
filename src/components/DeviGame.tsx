@@ -502,25 +502,26 @@ function ResultsScreen({
   }
 
   return (
-    <div className="devi-screen devi-results" ref={scrollerRef}>
+    <div className="devi-screen devi-results">
       <div className="devi-mandala-bg" aria-hidden />
 
-      <div className="devi-results-inner">
-        <div className="devi-tab-bar">
-          <button
-            className={`devi-tab${tab === 'results' ? ' devi-tab-active' : ''}`}
-            onClick={() => showSection('results')}
-          >
-            Your Results
-          </button>
-          <button
-            className={`devi-tab${tab === 'leaderboard' ? ' devi-tab-active' : ''}`}
-            onClick={() => showSection('leaderboard')}
-          >
-            Leaderboard
-          </button>
-        </div>
+      <div className="devi-tab-bar">
+        <button
+          className={`devi-tab${tab === 'results' ? ' devi-tab-active' : ''}`}
+          onClick={() => showSection('results')}
+        >
+          Your Results
+        </button>
+        <button
+          className={`devi-tab${tab === 'leaderboard' ? ' devi-tab-active' : ''}`}
+          onClick={() => showSection('leaderboard')}
+        >
+          Leaderboard
+        </button>
+      </div>
 
+      <div className="devi-results-scroll" ref={scrollerRef}>
+      <div className="devi-results-inner">
         <h2 className="devi-title devi-result-name">{playerName}</h2>
 
             <div className="devi-score-display">
@@ -590,6 +591,7 @@ function ResultsScreen({
               <h2 className="devi-title">Hall of Devotees</h2>
               <Leaderboard />
             </section>
+      </div>
       </div>
     </div>
   )
