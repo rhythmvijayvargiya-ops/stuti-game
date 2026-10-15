@@ -327,6 +327,7 @@ function LandingScreen({
     <div className="devi-screen devi-landing">
       <div className="devi-mandala-bg" aria-hidden />
 
+      <div className="devi-landing-scroll">
       <div className="devi-landing-inner">
         <div className="devi-halo-wrap">
           <img
@@ -381,6 +382,7 @@ function LandingScreen({
             </button>
           </>
         )}
+      </div>
       </div>
     </div>
   )

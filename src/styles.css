@@ -76,10 +76,24 @@ html, body {
 /* ─── Landing ────────────────────────────────────────────────────────────── */
 .devi-landing {
   background: linear-gradient(160deg, var(--ink-mid) 0%, var(--ink) 50%, var(--crimson-deep) 100%);
-  justify-content: safe center;
   height: 100dvh;
+  overflow: hidden;
+  padding: 0;
+}
+
+.devi-landing-scroll {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  padding: 2rem 1rem 3rem;
 }
 
 .devi-landing-inner {
