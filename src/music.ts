@@ -1,4 +1,4 @@
-const VOLUME = 0.55
+const VOLUME = 0.36
 
 let ctx: AudioContext | null = null
 let intro: AudioBuffer | null = null
@@ -14,6 +14,20 @@ function audioContext() {
   if (!ctx) ctx = new AudioContext()
   return ctx
 }
+
+function musicIsPlaying() {
+  return nodes.length > 0
+}
+
+function watchVisibility() {
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx || !musicIsPlaying()) return
+    if (document.hidden) void ctx.suspend()
+    else void ctx.resume()
+  })
+}
+
+watchVisibility()
 
 export function preloadBackground() {
   if (!preload) {
@@ -46,6 +60,7 @@ export function startBackground() {
     loopNode.connect(gain)
     loopNode.start(start + intro.duration)
     nodes = [introNode, loopNode]
+    if (document.hidden) void audio.suspend()
   })
 }
 
