@@ -470,6 +470,7 @@ function GameScreen({
     if (lockedRef.current) return
     setSelected(name)
     const isCorrect = name === currentName
+    if (isCorrect) navigator.vibrate?.(20)
     setFeedback(isCorrect ? 'correct' : 'wrong')
     advanceRound(
       { name: currentName, correct: isCorrect, guessed: name },
