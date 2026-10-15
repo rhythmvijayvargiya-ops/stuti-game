@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { preloadBackground, startBackground, stopBackground } from '../music'
 // ─── 33 Names of Lingabhairavi Devi ───────────────────────────────────────────
 // Filenames in /images/ (without extension) are the answer keys.
 // Replace/add images as: /images/{name}.jpg
@@ -724,7 +725,12 @@ export function DeviGame() {
   const [finalTimeMs, setFinalTimeMs] = useState(0)
   const [finalResults, setFinalResults] = useState<RoundResult[]>([])
 
+  useEffect(() => {
+    preloadBackground()
+  }, [])
+
   const handleBegin = (name: string) => {
+    startBackground()
     setPlayerName(name)
     setScreen('game')
   }
@@ -749,6 +755,7 @@ export function DeviGame() {
   }
 
   const handlePlayAgain = () => {
+    stopBackground()
     setFinalResults([])
     setFinalScore(0)
     setFinalTimeMs(0)
